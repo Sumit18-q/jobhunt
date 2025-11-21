@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Login</title>
+   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<main>
+   <div class="account-form-container">
+      <div class="branding-section">
+         <div class="branding-content">
+            <div class="logo">
+               <i class="fas fa-briefcase"></i>
+               <span>JobHunt</span>
+            </div>
+            <h1>Welcome Back</h1>
+            <p>Sign in to access your personalized job recommendations and continue your career journey.</p>
+            <div class="features">
+               <div class="feature-item">
+                  <i class="fas fa-search"></i>
+                  <span>Advanced Search</span>
+               </div>
+               <div class="feature-item">
+                  <i class="fas fa-users"></i>
+                  <span>Top Employers</span>
+               </div>
+               <div class="feature-item">
+                  <i class="fas fa-chart-line"></i>
+                  <span>Career Growth</span>
+               </div>
+            </div>
+            <div class="stats">
+               <div class="stat">
+                  <span class="number">25K+</span>
+                  <span class="label">Active Jobs</span>
+               </div>
+               <div class="stat">
+                  <span class="number">100K+</span>
+                  <span class="label">Job Seekers</span>
+               </div>
+               <div class="stat">
+                  <span class="number">15K+</span>
+                  <span class="label">Companies</span>
+               </div>
+            </div>
+         </div>
+      </div>
+      <section class="account-form">
+         {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+               <div class="flash-messages">
+                  {% for category, message in messages %}
+                     <div class="flash-message {{ category }}">
+                        {{ message }}
+                        <button class="close-btn" onclick="this.parentElement.style.display='none'">&times;</button>
+                     </div>
+                  {% endfor %}
+               </div>
+            {% endif %}
+         {% endwith %}
+         <form action="{{ url_for('login') }}" method="post">
+            <h3>Sign In</h3>
+            <p class="form-subtitle">Enter your credentials to access your account</p>
+            <div class="form-group">
+               <label for="email">Email Address</label>
+               <div class="input-wrapper">
+                  <i class="fas fa-envelope input-icon"></i>
+                  <input type="email" id="email" required name="email" maxlength="50" placeholder="Enter your email" class="input">
+               </div>
+            </div>
+            <div class="form-group">
+               <label for="pass">Password</label>
+               <div class="input-wrapper">
+                  <i class="fas fa-lock input-icon"></i>
+                  <input type="password" id="pass" required name="pass" maxlength="20" placeholder="Enter your password" class="input">
+                  <button type="button" class="password-toggle" onclick="togglePassword(this)">
+                     <i class="fas fa-eye"></i>
+                  </button>
+               </div>
+            </div>
+            <div class="form-options">
+               <label class="checkbox-container">
+                  <input type="checkbox" name="remember">
+                  <span class="checkmark"></span>
+                  Remember me
+               </label>
+               <a href="#" class="forgot-password">Forgot Password?</a>
+            </div>
+            <button type="submit" name="submit" class="btn">
+               <i class="fas fa-sign-in-alt"></i>
+               Sign In
+            </button>
+            <div class="divider">
+               <span>or</span>
+            </div>
+            <div class="social-login">
+               <button type="button" class="btn social-btn google-btn">
+                  <i class="fab fa-google"></i>
+                  Continue with Google
+               </button>
+               <button type="button" class="btn social-btn linkedin-btn">
+                  <i class="fab fa-linkedin-in"></i>
+                  Continue with LinkedIn
+               </button>
+            </div>
+            <p class="switch-form">Don't have an account? <a href="{{ url_for('register') }}">Create one now</a></p>
+         </form>
+      </section>
+   </div>
+</main>
+
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

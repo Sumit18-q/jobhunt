@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Home</title>
+
+   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+<body>
+<header class="header">
+
+   <section class="flex">
+
+      <div id="menu-btn" class="fas fa-bars-staggered"></div>
+
+      <a href="{{ url_for('home') }}" class="logo"><i class="fas fa-briefcase"></i> JobHunt.</a>
+
+      <nav class="navbar">
+         <a href="{{ url_for('home') }}">home</a>
+         <a href="{{ url_for('about') }}">about us</a>
+         <a href="{{ url_for('jobs') }}">all jobs</a>
+         <a href="{{ url_for('contact') }}">contact us</a>
+         <a href="{{ url_for('account') if session.get('user_id') else url_for('login') }}">{{ 'account' if session.get('user_id') else 'login' }}</a>
+         {% if session.get('user_id') %}
+         <a href="{{ url_for('messages') }}">messages</a>
+         {% endif %}
+      </nav>
+
+      <div style="display: flex; gap: 1rem; align-items: center;">
+         <a href="{{ url_for('post_job') }}" class="btn" style="margin-top: 0;">post job</a>
+         {% if session.get('user_id') %}
+         <a href="{{ url_for('logout') }}" class="btn" style="margin-top: 0; background: #dc3545;">Logout</a>
+         {% endif %}
+      </div>
+
+   </section>
+
+</header>
+<main>
+   <div class="home-container">
+      <section class="home">
+         <h3>Find Your Dream Job</h3>
+         <p>Discover thousands of opportunities from top companies worldwide</p>
+         <form action="" method="post" role="search">
+            <div class="form-group">
+               <label for="title">What job are you looking for?</label>
+               <input type="text" id="title" name="title" placeholder="Job title, keywords, or company" required maxlength="20" class="input">
+            </div>
+            <div class="form-group">
+               <label for="location">Where do you want to work?</label>
+               <input type="text" id="location" name="location" placeholder="City, state, or country" required maxlength="50" class="input">
+            </div>
+            <button type="submit" name="search" class="btn">
+               <i class="fas fa-search"></i>
+               Search Jobs
+            </button>
+         </form>
+      </section>
+
+      {% if recommended_jobs %}
+      <section class="recommended-jobs">
+         <h2 class="heading">Recommended for You</h2>
+         <div class="jobs-grid">
+            {% for job in recommended_jobs %}
+            <div class="job-card">
+               <div class="job-header">
+                  <h4>{{ job.title }}</h4>
+                  <span class="company">{{ job.company }}</span>
+               </div>
+               <div class="job-meta">
+                  <span><i class="fas fa-map-marker-alt"></i> {{ job.location }}</span>
+                  <span><i class="fas fa-indian-rupee-sign"></i> {{ job.salary }}</span>
+                  <span><i class="fas fa-briefcase"></i> {{ job.type }}</span>
+               </div>
+               <p class="job-description">{{ job.description[:100] }}...</p>
+               <div class="job-actions">
+                  <a href="{{ url_for('job_details', job_id=job.id) }}" class="btn small">View Details</a>
+                  <a href="{{ url_for('apply_job', job_id=job.id) }}" class="btn small primary">Apply Now</a>
+               </div>
+            </div>
+            {% endfor %}
+         </div>
+      </section>
+      {% endif %}
+   </div>
+</main>
+<footer class="footer">
+   <div class="credit">&copy; copyright @ 2025 by <span>mr. web designer</span> | all rights reserved!</div>
+</footer>
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>All Jobs</title>
+   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+<body>
+<header class="header">
+
+   <section class="flex">
+
+      <div id="menu-btn" class="fas fa-bars-staggered"></div>
+
+      <a href="{{ url_for('home') }}" class="logo"><i class="fas fa-briefcase"></i> JobHunt.</a>
+
+      <nav class="navbar">
+         <a href="{{ url_for('home') }}">home</a>
+         <a href="{{ url_for('about') }}">about us</a>
+         <a href="{{ url_for('jobs') }}">all jobs</a>
+         <a href="{{ url_for('contact') }}">contact us</a>
+         <a href="{{ url_for('account') if session.get('user_id') else url_for('login') }}">{{ 'account' if session.get('user_id') else 'login' }}</a>
+      </nav>
+      <div style="display: flex; gap: 1rem; align-items: center;">
+         <a href="{{ url_for('post_job') }}" class="btn" style="margin-top: 0;">post job</a>
+         {% if session.get('user_id') %}
+         <a href="{{ url_for('logout') }}" class="btn" style="margin-top: 0; background: #dc3545;">Logout</a>
+         {% endif %}
+      </div>
+
+   </section>
+
+</header>
+
+<main>
+   <section class="jobs-container">
+      <h1 class="heading">All Jobs</h1>
+
+      <!-- Search and Filter Section -->
+      <div class="search-filter">
+         <h2 class="heading" style="font-size: 2.5rem; margin-bottom: 2rem;">Find Your Perfect Job</h2>
+         <div class="search-bar">
+            <input type="text" id="job-search" placeholder="Search jobs by title, company, or location..." class="input" value="{{ request.args.get('title', '') }}">
+            <button id="search-btn" class="btn">
+               <i class="fas fa-search"></i>
+               Search
+            </button>
+         </div>
+         <div class="filters">
+            <select id="location-filter" class="input">
+               <option value="">All Locations</option>
+               <option value="hyderabad" {% if request.args.get('location') == 'hyderabad' %}selected{% endif %}>Hyderabad</option>
+               <option value="delhi" {% if request.args.get('location') == 'delhi' %}selected{% endif %}>Delhi</option>
+               <option value="mumbai" {% if request.args.get('location') == 'mumbai' %}selected{% endif %}>Mumbai</option>
+               <option value="pune" {% if request.args.get('location') == 'pune' %}selected{% endif %}>Pune</option>
+               <option value="bangalore" {% if request.args.get('location') == 'bangalore' %}selected{% endif %}>Bangalore</option>
+               <option value="bhubneswar" {% if request.args.get('location') == 'bhubneswar' %}selected{% endif %}>Bhubneswar</option>
+            </select>
+            <select id="type-filter" class="input">
+               <option value="">All Types</option>
+               <option value="full-time" {% if request.args.get('type') == 'full-time' %}selected{% endif %}>Full-time</option>
+               <option value="part-time" {% if request.args.get('type') == 'part-time' %}selected{% endif %}>Part-time</option>
+               <option value="internship" {% if request.args.get('type') == 'internship' %}selected{% endif %}>Internship</option>
+               <option value="contract" {% if request.args.get('type') == 'contract' %}selected{% endif %}>Contract</option>
+               <option value="temporary" {% if request.args.get('type') == 'temporary' %}selected{% endif %}>Temporary</option>
+               <option value="fresher" {% if request.args.get('type') == 'fresher' %}selected{% endif %}>Fresher</option>
+            </select>
+            <input type="text" id="salary-min" placeholder="Min Salary" class="input" value="{{ request.args.get('salary_min', '') }}">
+            <input type="text" id="salary-max" placeholder="Max Salary" class="input" value="{{ request.args.get('salary_max', '') }}">
+            <select id="experience-filter" class="input">
+               <option value="">Experience Level</option>
+               <option value="entry" {% if request.args.get('experience') == 'entry' %}selected{% endif %}>Entry Level (0-2 years)</option>
+               <option value="mid" {% if request.args.get('experience') == 'mid' %}selected{% endif %}>Mid Level (3-5 years)</option>
+               <option value="senior" {% if request.args.get('experience') == 'senior' %}selected{% endif %}>Senior Level (5+ years)</option>
+            </select>
+            <input type="text" id="skills-filter" placeholder="Skills (comma separated)" class="input" value="{{ request.args.get('skills', '') }}">
+            <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+               <button id="apply-filters" class="btn">Apply Filters</button>
+               <button id="clear-filters" class="btn secondary">Clear Filters</button>
+            </div>
+         </div>
+      </div>
+
+   <div class="box-container">
+      {% for job in jobs %}
+      <div class="box">
+         <div class="company">
+            <img src="https://via.placeholder.com/50" alt="Company Logo">
+            <div>
+               <h3>{{ job.company }}</h3>
+               <p>{{ job.created_at.strftime('%d %b %Y') }}</p>
+            </div>
+         </div>
+         <h3 class="job-title">{{ job.title }}</h3>
+         <p class="location"><i class="fas fa-map-marker-alt"></i> <span>{{ job.location }}</span></p>
+         <div class="tags">
+            <p><i class="fas fa-indian-rupee-sign"></i> <span>{{ job.salary }}</span></p>
+            <p><i class="fas fa-briefcase"></i> <span>{{ job.type }}</span></p>
+            <p><i class="fas fa-clock"></i> <span>Flexible</span></p>
+         </div>
+         <div class="flex-btn">
+            <a href="{{ url_for('job_details', job_id=job.id) }}" class="btn">view details</a>
+            {% if session.user_id %}
+            <button class="save-job-btn btn secondary" data-job-id="{{ job.id }}">
+               <i class="fas fa-heart"></i> {% if job.id in saved_job_ids %}Saved{% else %}Save{% endif %}
+            </button>
+            {% endif %}
+         </div>
+      </div>
+      {% endfor %}
+
+      </div>
+   </div>
+   </section>
+</main>
+<footer class="footer">
+   <div class="credit">&copy; copyright @ 2025 by <span>JOB HUNT</span> | all rights reserved!</div>
+</footer>
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+<script>
+let dropdown_items = document.querySelectorAll('.job-filter form .dropdown-container .dropdown .lists .items');
+dropdown_items.forEach(items =>{
+   items.onclick = () =>{
+      items_parent = items.parentElement.parentElement;
+      let output = items_parent.querySelector('.output');
+      output.value = items.innerText;
+   }
+});
+</script>
+</body>
+</html>

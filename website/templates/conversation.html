@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}Conversation with {{ other_user.name }} - JobHunt{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>Conversation with {{ other_user.name }}</h2>
+                <a href="{{ url_for('messages') }}" class="btn btn-secondary">Back to Messages</a>
+            </div>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <!-- Messages Display -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Messages</h5>
+                </div>
+                <div class="card-body" style="max-height: 400px; overflow-y: auto;">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="message mb-3 {% if message.sender_id == session['user_id'] %}text-end{% endif %}">
+                                <div class="d-inline-block p-3 rounded {% if message.sender_id == session['user_id'] %}bg-primary text-white{% else %}bg-light{% endif %}" style="max-width: 70%;">
+                                    {% if message.subject %}
+                                        <strong>{{ message.subject }}</strong><br>
+                                    {% endif %}
+                                    <p class="mb-1">{{ message.content }}</p>
+                                    <small class="{% if message.sender_id == session['user_id'] %}text-white-50{% else %}text-muted{% endif %}">
+                                        {{ message.sent_at.strftime('%Y-%m-%d %H:%M') }}
+                                        {% if message.sender_id == session['user_id'] %}
+                                            (You)
+                                        {% else %}
+                                            ({{ other_user.name }})
+                                        {% endif %}
+                                    </small>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-muted text-center">No messages yet. Start the conversation!</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Send Message Form -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Send Message</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        <div class="mb-3">
+                            <label for="subject" class="form-label">Subject (Optional)</label>
+                            <input type="text" class="form-control" id="subject" name="subject" maxlength="200">
+                        </div>
+                        <div class="mb-3">
+                            <label for="content" class="form-label">Message *</label>
+                            <textarea class="form-control" id="content" name="content" rows="4" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

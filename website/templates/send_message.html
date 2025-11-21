@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Send Message to {{ receiver.name }} - JobHunt{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>Send Message to {{ receiver.name }}</h2>
+                <a href="{{ url_for('messages') }}" class="btn btn-secondary">Back to Messages</a>
+            </div>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Compose Message</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        <div class="mb-3">
+                            <label for="subject" class="form-label">Subject (Optional)</label>
+                            <input type="text" class="form-control" id="subject" name="subject" maxlength="200" placeholder="Enter a subject for your message">
+                        </div>
+                        <div class="mb-3">
+                            <label for="content" class="form-label">Message *</label>
+                            <textarea class="form-control" id="content" name="content" rows="6" required placeholder="Write your message here..."></textarea>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ url_for('messages') }}" class="btn btn-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-primary">Send Message</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

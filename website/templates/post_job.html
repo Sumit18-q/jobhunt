@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Post Job</title>
+   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<header class="header">
+
+   <section class="flex">
+
+      <div id="menu-btn" class="fas fa-bars-staggered"></div>
+
+      <a href="{{ url_for('home') }}" class="logo"><i class="fas fa-briefcase"></i> JobHunt.</a>
+
+      <nav class="navbar">
+         <a href="{{ url_for('home') }}">home</a>
+         <a href="{{ url_for('about') }}">about us</a>
+         <a href="{{ url_for('jobs') }}">all jobs</a>
+         <a href="{{ url_for('contact') }}">contact us</a>
+         <a href="{{ url_for('account') if session.get('user_id') else url_for('login') }}">{{ 'account' if session.get('user_id') else 'login' }}</a>
+      </nav>
+
+      <div style="display: flex; gap: 1rem; align-items: center;">
+         <a href="{{ url_for('post_job') }}" class="btn" style="margin-top: 0;">post job</a>
+         {% if session.get('user_id') %}
+         <a href="{{ url_for('logout') }}" class="btn" style="margin-top: 0; background: #dc3545;">Logout</a>
+         {% endif %}
+      </div>
+
+   </section>
+
+</header>
+
+<main>
+   <section class="post-job-container">
+      <h1 class="heading">Post a New Job</h1>
+
+      <form action="{{ url_for('post_job') }}" method="post" class="post-job-form">
+         <div class="form-group">
+            <label for="title">Job Title <span>*</span></label>
+            <input type="text" id="title" name="title" placeholder="e.g. Senior Web Developer" required maxlength="100" class="input">
+         </div>
+         <div class="form-group">
+            <label>Company <span>*</span></label>
+            <div class="company-options">
+               <div class="option">
+                  <input type="radio" id="existing" name="company_option" value="existing" checked>
+                  <label for="existing">Select existing company</label>
+                  <select id="company_id" name="company_id" class="input" style="margin-top: 0.5rem;">
+                     <option value="">Choose a company</option>
+                     {% for company in user_companies %}
+                     <option value="{{ company.id }}">{{ company.name }}</option>
+                     {% endfor %}
+                  </select>
+               </div>
+               <div class="option">
+                  <input type="radio" id="new" name="company_option" value="new">
+                  <label for="new">Create new company</label>
+                  <input type="text" id="new_company_name" name="new_company_name" placeholder="e.g. Infosys" maxlength="100" class="input" style="margin-top: 0.5rem;" disabled>
+               </div>
+            </div>
+         </div>
+         <div class="form-group">
+            <label for="location">Job Location <span>*</span></label>
+            <input type="text" id="location" name="location" placeholder="e.g. Hyderabad, India" required maxlength="100" class="input">
+         </div>
+         <div class="form-group">
+            <label for="salary">Salary <span>*</span></label>
+            <input type="text" id="salary" name="salary" placeholder="e.g. 10k - 25k" required maxlength="50" class="input">
+         </div>
+         <div class="form-group">
+            <label for="type">Job Type <span>*</span></label>
+            <select id="type" name="type" required class="input">
+               <option value="">Select Job Type</option>
+               <option value="full-time">Full-time</option>
+               <option value="part-time">Part-time</option>
+               <option value="internship">Internship</option>
+               <option value="contract">Contract</option>
+               <option value="temporary">Temporary</option>
+               <option value="fresher">Fresher</option>
+            </select>
+         </div>
+         <div class="form-group">
+            <label for="description">Job Description <span>*</span></label>
+            <textarea id="description" name="description" placeholder="Describe the job requirements, responsibilities, etc." required class="input" rows="6"></textarea>
+         </div>
+         <input type="submit" value="Post Job" class="btn">
+      </form>
+   </section>
+</main>
+
+<footer class="footer">
+   <div class="credit">&copy; copyright @ 2025 by <span>JOB HUNT</span> | all rights reserved!</div>
+</footer>
+
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const existingRadio = document.getElementById('existing');
+    const newRadio = document.getElementById('new');
+    const companySelect = document.getElementById('company_id');
+    const newCompanyInput = document.getElementById('new_company_name');
+
+    function toggleCompanyFields() {
+        if (existingRadio.checked) {
+            companySelect.disabled = false;
+            newCompanyInput.disabled = true;
+            newCompanyInput.value = '';
+        } else if (newRadio.checked) {
+            companySelect.disabled = true;
+            companySelect.value = '';
+            newCompanyInput.disabled = false;
+        }
+    }
+
+    existingRadio.addEventListener('change', toggleCompanyFields);
+    newRadio.addEventListener('change', toggleCompanyFields);
+
+    // Initial state
+    toggleCompanyFields();
+});
+</script>
+</body>
+</html>

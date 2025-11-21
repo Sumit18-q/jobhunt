@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>About</title>
+
+
+   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+<body>
+
+
+<header class="header">
+
+   <section class="flex">
+      <div id="menu-btn" class="fas fa-bars-staggered"></div>
+
+      <a href="{{ url_for('home') }}" class="logo"><i class="fas fa-briefcase"></i> JobHunt.</a>
+
+      <nav class="navbar">
+         <a href="{{ url_for('home') }}">home</a>
+         <a href="{{ url_for('about') }}">about us</a>
+         <a href="{{ url_for('jobs') }}">all jobs</a>
+         <a href="{{ url_for('contact') }}">contact us</a>
+         <a href="{{ url_for('account') if session.get('user_id') else url_for('login') }}">{{ 'account' if session.get('user_id') else 'login' }}</a>
+      </nav>
+
+      <div style="display: flex; gap: 1rem; align-items: center;">
+         <a href="{{ url_for('post_job') }}" class="btn" style="margin-top: 0;">post job</a>
+         {% if session.get('user_id') %}
+         <a href="{{ url_for('logout') }}" class="btn" style="margin-top: 0; background: #dc3545;">Logout</a>
+         {% endif %}
+      </div>
+
+   </section>
+
+</header>
+
+
+<main>
+   <div class="section-title">About Us</div>
+   <section class="about">
+      <img src="about-img.svg" alt="About Job Hunt illustration">
+      <div class="box">
+         <h3>About Job Hunt</h3>
+         <p>Our Job Portal Web Application is a smart, user-friendly platform designed to bridge the gap between job seekers and employers. It offers a reliable and efficient way for candidates to explore opportunities and apply seamlessly, while helping companies post vacancies and connect with the right talent.</p>
+         <p>With advanced search and filter options, job seekers can easily find openings that match their skills, location, and career goals. Employers benefit from a streamlined recruitment process, featuring resume management, candidate shortlisting, and instant communication tools.</p>
+         <p>The application is built with secure login, real-time updates, and a responsive design, ensuring a smooth experience on both desktop and mobile devices. By integrating modern technology and a simple interface, our job portal makes hiring faster, easier, and more effective for everyone.</p>
+         <a href="contact.html" class="btn">Contact Us</a>
+      </div>
+   </section>
+</main>
+
+<footer class="footer">
+   <div class="credit">&copy; copyright @ 2025 by <span>JOB HUNT</span> | all rights reserved!</div>
+</footer>
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+   
+</body>
+</html>

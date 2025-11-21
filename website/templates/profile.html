@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Profile - JobHunt</title>
+   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<header class="header">
+
+   <section class="flex">
+
+      <div id="menu-btn" class="fas fa-bars-staggered"></div>
+
+      <a href="{{ url_for('home') }}" class="logo"><i class="fas fa-briefcase"></i> JobHunt.</a>
+
+      <nav class="navbar">
+         <a href="{{ url_for('home') }}">home</a>
+         <a href="{{ url_for('about') }}">about us</a>
+         <a href="{{ url_for('jobs') }}">all jobs</a>
+         <a href="{{ url_for('contact') }}">contact us</a>
+         <a href="{{ url_for('account') if session.get('user_id') else url_for('login') }}">{{ 'account' if session.get('user_id') else 'login' }}</a>
+         {% if session.get('user_id') %}
+         <a href="{{ url_for('messages') }}">messages</a>
+         {% endif %}
+      </nav>
+
+      <div style="display: flex; gap: 1rem; align-items: center;">
+         <a href="{{ url_for('post_job') }}" class="btn" style="margin-top: 0;">post job</a>
+         {% if session.get('user_id') %}
+         <a href="{{ url_for('logout') }}" class="btn" style="margin-top: 0; background: #dc3545;">Logout</a>
+         {% endif %}
+      </div>
+
+   </section>
+
+</header>
+
+<main>
+   <section class="profile-container">
+      <h1 class="heading">My Profile</h1>
+
+      <form action="{{ url_for('profile') }}" method="post" enctype="multipart/form-data" class="profile-form">
+         <div class="form-section">
+            <h3>Personal Information</h3>
+            <div class="form-group">
+               <label for="phone">Phone Number</label>
+               <input type="tel" id="phone" name="phone" value="{{ profile.phone if profile else '' }}" placeholder="Enter your phone number" class="input">
+            </div>
+            <div class="form-group">
+               <label for="location">Location</label>
+               <input type="text" id="location" name="location" value="{{ profile.location if profile else '' }}" placeholder="City, State/Country" class="input">
+            </div>
+            <div class="form-group">
+               <label for="bio">Bio</label>
+               <textarea id="bio" name="bio" placeholder="Tell us about yourself..." class="input" rows="4">{{ profile.bio if profile else '' }}</textarea>
+            </div>
+         </div>
+
+         <div class="form-section">
+            <h3>Professional Information</h3>
+            <div class="form-group">
+               <label for="current_position">Current Position</label>
+               <input type="text" id="current_position" name="current_position" value="{{ profile.current_position if profile else '' }}" placeholder="e.g. Software Developer" class="input">
+            </div>
+            <div class="form-group">
+               <label for="experience_years">Years of Experience</label>
+               <select id="experience_years" name="experience_years" class="input">
+                  <option value="0" {{ 'selected' if (profile and profile.experience_years == 0) else '' }}>Fresher</option>
+                  <option value="1" {{ 'selected' if (profile and profile.experience_years == 1) else '' }}>1 year</option>
+                  <option value="2" {{ 'selected' if (profile and profile.experience_years == 2) else '' }}>2 years</option>
+                  <option value="3" {{ 'selected' if (profile and profile.experience_years == 3) else '' }}>3 years</option>
+                  <option value="4" {{ 'selected' if (profile and profile.experience_years == 4) else '' }}>4 years</option>
+                  <option value="5" {{ 'selected' if (profile and profile.experience_years == 5) else '' }}>5+ years</option>
+               </select>
+            </div>
+            <div class="form-group">
+               <label for="skills">Skills (comma-separated)</label>
+               <input type="text" id="skills" name="skills" value="{{ profile.skills if profile else '' }}" placeholder="e.g. Python, JavaScript, React" class="input">
+            </div>
+            <div class="form-group">
+               <label for="education">Education</label>
+               <textarea id="education" name="education" placeholder="Your educational background..." class="input" rows="3">{{ profile.education if profile else '' }}</textarea>
+            </div>
+         </div>
+
+         <div class="form-section">
+            <h3>Online Presence</h3>
+            <div class="form-group">
+               <label for="linkedin_url">LinkedIn Profile</label>
+               <input type="url" id="linkedin_url" name="linkedin_url" value="{{ profile.linkedin_url if profile else '' }}" placeholder="https://linkedin.com/in/yourprofile" class="input">
+            </div>
+            <div class="form-group">
+               <label for="portfolio_url">Portfolio Website</label>
+               <input type="url" id="portfolio_url" name="portfolio_url" value="{{ profile.portfolio_url if profile else '' }}" placeholder="https://yourportfolio.com" class="input">
+            </div>
+         </div>
+
+         <div class="form-section">
+            <h3>Resume</h3>
+            <div class="form-group">
+               <label for="resume">Upload Resume (PDF, DOC, DOCX)</label>
+               <input type="file" id="resume" name="resume" accept=".pdf,.doc,.docx" class="input">
+               {% if profile and profile.resume_filename %}
+               <p class="current-file">Current resume: {{ profile.resume_filename }}</p>
+               {% endif %}
+            </div>
+         </div>
+
+         <div class="form-actions">
+            <button type="submit" class="btn">Save Profile</button>
+            <a href="{{ url_for('account') }}" class="btn secondary">Back to Account</a>
+         </div>
+      </form>
+   </section>
+</main>
+
+<footer class="footer">
+   <div class="credit">&copy; copyright @ 2025 by <span>JOB HUNT</span> | all rights reserved!</div>
+</footer>
+
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
